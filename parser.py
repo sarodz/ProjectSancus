@@ -1,16 +1,18 @@
 import docx
-#import PyPDF2
+import PyPDF2
+import os
+#import sys
 
 class Text:
     def __init__(self, location):
         self.wtf(location)
 
     def wtf(self, location):
-        # divide location string, let's work with windows
+        # divide location string, let's work witxh windows
         file = location.split('/')
         fin = len(file) - 1
 
-        # find the type
+        # find the TYPE
         name = file[fin].split('.')
         matype = name[len(name) - 1]
 
@@ -31,8 +33,6 @@ class Text:
         print("I was made by a bad programmer")
 
 
-#def headquarters():
-#    print("Fun")
-
 if __name__ == "__main__":
-    Text("aa/aa/resume.kk")
+    PATH = os.getcwd()
+    Text(PATH+"/1Resume.docx")
