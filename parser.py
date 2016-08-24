@@ -1,14 +1,14 @@
 import docx
-import PyPDF2
+from PyPDF2 import PdfFileReader
 import os
-#import sys
 
-class Text:
+class RawText:
     def __init__(self, location):
+        self.contents = [] # make this a dict key should be type+#
         self.wtf(location)
 
     def wtf(self, location):
-        # divide location string, let's work witxh windows
+        # divide location string, let's work with windows
         file = location.split('/')
         fin = len(file) - 1
 
@@ -24,10 +24,17 @@ class Text:
             self.otherreader()
 
     def wordreader(self,location):
-        print("I iz word")
+        word = docx.Document(location)
+
+        for p in word.paragraphs:
+            self.contents.append(p.text)
 
     def pdfreader(self,location):
-        print("No fool, I am pdf")
+        pdf = PdfFileReader(open(location, "rb"))
+        length = pdf.numPages
+
+        for i in range(0,length):
+            self.contents.append(pdf.getPage(i).extractText())
 
     def otherreader(self):
         print("I was made by a bad programmer")
@@ -35,4 +42,5 @@ class Text:
 
 if __name__ == "__main__":
     PATH = os.getcwd()
-    Text(PATH+"/1Resume.docx")
+    x = RawText(PATH+"\\1Resume.docx")
+    print(x.contents)
