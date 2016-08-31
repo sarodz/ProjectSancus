@@ -5,9 +5,15 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
-#LinkParser uses some methods from HTMLParser
 class LinkParser(HTMLParser):
+    """Generates links for major job posting sites and collects job information
 
+        Attributes:
+            location (str): The location of the job search
+            topic (str): The type of jobs crawler looks at
+            link (str): For cases the user provides a link [revise]
+            limit (int): Limit search
+    """
     def __init__(self, location, topic, link = None, limit = 0):
         self.limit = limit
         _, self.link = self.getLinks(link) #let's divy this to a link checker and a data returner
@@ -16,9 +22,9 @@ class LinkParser(HTMLParser):
 
     def indeedURL(self):
         """Helper function to create the URL for Indeed
-        :return: String HTML of the entered data
+        :return: String url needed for the search
         """
-        page = 0
+        page = 0 #increment by 20 (self.limit*20 ?)
         # format page to match what Indeed is looking for
         search_term = re.sub(' ', '+', self.topic)
         # generic Indeed link
@@ -32,7 +38,29 @@ class LinkParser(HTMLParser):
 
         return url
 
-    # to do: Monster and Workapolis version
+    def monsterURL(self):
+        """Helper function to create the URL for Monster
+        :return: String url needed for the search
+        """
+        page = 1 #increment by +1
+        # format page to match what Monster is looking for
+        search_term = re.sub(' ', '-', self.topic)
+        # generic Monster link
+        url = 'http://www.monster.ca/jobs?q=' + str(search_term) + '&where=' + self.location + '&page=' + str(page)
+
+        return url
+
+    def wpolisURL(self):
+        """Helper function to create the URL for Workopolis
+        :return: String url needed for the search
+        """
+        page = 1 #increment by +1
+        # format page to match what Monster is looking for
+        search_term = re.sub(' ', '+', self.topic)
+        # generic Monster link
+        url = 'http://www.workopolis.com/jobsearch/find-jobs?lg=en&ak=' + str(search_term) + '&l=' + self.location + '&pn=' + str(page)
+
+        return url
 
     def handle_starttag(self, tag, attrs):
         """Generic URL handler
